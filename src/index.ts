@@ -2,22 +2,21 @@ import { Hono } from "hono"
 
 const app = new Hono()
 
-function convertUrls(text: string, prefix: string = "URL") {
-  const regex = /\b(?:https?:\/\/)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/\S*)?/g;
-  const matches = text.match(regex) || [];
-  let count = 1;
-  let result = text;
+function convertUrls(text: string, prefix?: string) {
+  const regex = /\b(?:https?:\/\/)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/\S*)?/g
+  const matches = text.match(regex) || []
+  let count = 1
+  let result = text
 
   for (const m of matches) {
-    const full = m.startsWith('http') ? m : 'https://' + m;
-    const escaped = m.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
-    const title = prefix + " " + count++;
-    result = result.replace(new RegExp(escaped, 'g'), `(${title})[${full}]`);
+    const full = m.startsWith("http") ? m : "https://" + m
+    const escaped = m.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")
+    const title = prefix ? prefix + " " + count++ : full
+    result = result.replace(new RegExp(escaped, "g"), `(${title})[${full}]`)
   }
 
-  return result;
+  return result
 }
-
 
 app.get("/", async (c) => {
   const encodedText = c.req.query("text")
