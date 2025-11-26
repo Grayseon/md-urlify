@@ -12,7 +12,7 @@ function convertUrls(text: string, prefix?: string) {
     const full = m.startsWith("http") ? m : "https://" + m
     const escaped = m.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")
     const title = prefix ? prefix + " " + count++ : full
-    result = result.replace(new RegExp(escaped, "g"), `(${title})[${full}]`)
+    result = result.replace(new RegExp(escaped, "g"), `[${title}](${full})`)
   }
 
   return result
