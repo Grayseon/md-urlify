@@ -3,16 +3,22 @@ import { Hono } from "hono"
 const app = new Hono()
 
 function convertUrls(text: string, prefix?: string) {
-  const regex = /\b(?:https?:\/\/)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/\S*)?/g
-  const matches = text.match(regex) || []
-  let count = 1
+  const regex =
+    /(?<![\[\(])\b(?:https?:\/\/)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/\S*)?/g
+  const matches = [...text.matchAll(regex)]
   let result = text
+  let offset = 0
+  let count = 1
 
-  for (const m of matches) {
+  for (const match of matches) {
+    const m = match[0]
+    const start = match.index + offset
+    const end = start + m.length
     const full = m.startsWith("http") ? m : "https://" + m
-    const escaped = m.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")
     const title = prefix ? prefix + " " + count++ : full
-    result = result.replace(new RegExp(escaped, "g"), `[${title}](${full})`)
+    const replacement = `[${title}](${full})`
+    result = result.slice(0, start) + replacement + result.slice(end)
+    offset += replacement.length - m.length
   }
 
   return result
