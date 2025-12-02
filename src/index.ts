@@ -1,5 +1,5 @@
 import { Hono } from "hono"
-import { ConfirmationMessage } from "./components.js"
+import { ConfirmationMessage } from "./components"
 
 const app = new Hono()
 
