@@ -1,5 +1,5 @@
 import { Hono } from "hono"
-import { ConfirmationMessage } from "./components"
+import { ConfirmationMessage } from "./components.js"
 
 const app = new Hono()
 
@@ -41,9 +41,9 @@ app.get('/form-complete', async (c) => {
   const decision = c.req.query("decision")!
   const id = c.req.query("id")!
 
-  return c.html(ConfirmationMessage({
+  return c.html(ConfirmationMessage(
     decision, id
-  }))
+  ))
 })
 
 app.post('/form-complete', async (c) => {
