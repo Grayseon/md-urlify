@@ -36,4 +36,16 @@ app.get("/", async (c) => {
   return c.text(convertUrls(text, prefix))
 })
 
+app.get('/form-complete', async (c)=>{
+  const decision = c.req.query("decision")
+  const id = c.req.query("id")
+
+  const url = process.env.FLOW_URL
+
+  const req = await fetch(`${url}&decision=${decision}&id=${id}`)
+  const text = await req.text()
+
+  return c.text(text.toString())
+})
+
 export default app
